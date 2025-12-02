@@ -20,14 +20,14 @@
             </button>
 
             <ul id="formMenu" class="sidebar-submenu">
+                <li><a href="{{ route('modulos.nuevo') }}">Nuevo Módulo</a></li>
+                <li><a href="{{ route('tareas.nuevo') }}">Nueva Tarea</a></li>
+                <li><a href="{{ route('usuarios.nuevo') }}">Nuevo Usuario</a></li>
+                <li><a href="{{ route('roles.nuevo') }}">Nuevo Rol</a></li>
                 <li><a href="{{ route('empresa.nueva') }}">Nueva Empresa</a></li>
                 <li><a href="{{ route('familia.nueva') }}">Nueva Familia</a></li>
-                <li><a href="{{ route('costo.nuevo') }}">Nuevo Costo</a></li>
-                <li><a href="{{ route('modulo.nuevo') }}">Nuevo Módulo</a></li>
+                <li><a href="{{ route('costo.nuevo') }}">Nuevo Costo</a></li
                 <li><a href="{{ route('producto.nuevo') }}">Nuevo Producto</a></li>
-                <li><a href="{{ route('tarea.nueva') }}">Nueva Tarea</a></li>
-                <li><a href="{{ route('usuario.nuevo') }}">Nuevo Usuario</a></li>
-                <li><a href="{{ route('rol.nuevo') }}">Nuevo Rol</a></li>
                 <li><a href="{{ route('proveedor.nuevo') }}">Nuevo Proveedor</a></li>
                 <li><a href="{{ route('compra.nueva') }}">Nueva Compra</a></li>
                 <li><a href="{{ route('inventario.nuevo') }}">Inventario</a></li>
@@ -45,14 +45,16 @@
             </button>
 
             <ul id="listMenu" class="sidebar-submenu">
+                <ul id="listMenu" class="sidebar-submenu">
+               <li><a href="{{ route('modulos.lista') }}">Módulos</a></li>
+                <li><a href="{{ route('tareas.lista') }}">Tareas</a></li>
+                <li><a href="{{ route('usuarios.lista') }}">Usuarios</a></li>
+                <li><a href="{{ route('roles.lista') }}">Roles</a></li>
+
                 <li><a href="{{ route('empresa.lista') }}">Empresas</a></li>
                 <li><a href="{{ route('familia.lista') }}">Familias</a></li>
                 <li><a href="{{ route('costo.lista') }}">Costos</a></li>
-                <li><a href="{{ route('modulo.lista') }}">Módulos</a></li>
                 <li><a href="{{ route('producto.lista') }}">Productos</a></li>
-                <li><a href="{{ route('tarea.lista') }}">Tareas</a></li>
-                <li><a href="{{ route('usuario.lista') }}">Usuarios</a></li>
-                <li><a href="{{ route('rol.lista') }}">Roles</a></li>
                 <li><a href="{{ route('proveedor.lista') }}">Proveedores</a></li>
             </ul>
         </li>
@@ -67,14 +69,15 @@
             </button>
 
             <ul id="gestionMenu" class="sidebar-submenu">
+                <li><a href="{{ route('modulos.gestion') }}">Módulos</a></li>
+                <li><a href="{{ route('tareas.gestion') }}">Tareas</a></li>
+                <li><a href="{{ route('usuarios.gestion') }}">Usuarios</a></li>
+                <li><a href="{{ route('roles.gestion') }}">Roles</a></li>
+
                 <li><a href="{{ route('empresa.lista') }}">Empresas</a></li>
                 <li><a href="{{ route('familia.gestion') }}">Familias</a></li>
                 <li><a href="{{ route('costo.gestion') }}">Costos</a></li>
-                <li><a href="{{ route('modulo.gestion') }}">Módulos</a></li>
                 <li><a href="{{ route('producto.gestion') }}">Productos</a></li>
-                <li><a href="{{ route('tarea.gestion') }}">Tareas</a></li>
-                <li><a href="{{ route('usuario.gestion') }}">Usuarios</a></li>
-                <li><a href="{{ route('rol.gestion') }}">Roles</a></li>
                 <li><a href="{{ route('proveedor.gestion') }}">Proveedores</a></li>
             </ul>
         </li>

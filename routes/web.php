@@ -5,6 +5,12 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\CostoController;
 
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\RolController;
+use App\Http\Controllers\ModuloController;
+use App\Http\Controllers\TareaController;
+
+
 Route::get('/login', [LoginController::class, 'mostrarLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'procesarLogin']);
 Route::get('/logout', [LoginController::class, 'logout']);
@@ -69,6 +75,138 @@ Route::get('/costos/editar/{id}', [CostoController::class, 'editar'])->name('cos
 Route::put('/costos/actualizar/{id}', [CostoController::class, 'actualizar'])->name('costo.actualizar');
 
 Route::delete('/costos/eliminar/{id}', [CostoController::class, 'eliminar'])->name('costo.eliminar');
+
+// ==========================================================
+//  USUARIOS
+// ==========================================================
+Route::prefix('usuarios')->group(function () {
+
+    // LISTAS
+    Route::get('/lista', [UsuarioController::class, 'lista'])
+        ->name('usuarios.lista');
+
+    Route::get('/gestion', [UsuarioController::class, 'gestion'])
+        ->name('usuarios.gestion');
+
+    // CRUD BÁSICO
+    Route::get('/nuevo', [UsuarioController::class, 'nuevo'])
+        ->name('usuarios.nuevo');
+
+    Route::post('/guardar', [UsuarioController::class, 'guardar'])
+        ->name('usuarios.guardar');
+
+    Route::get('/editar/{id}', [UsuarioController::class, 'editar'])
+        ->name('usuarios.editar');
+
+    // Guardar datos generales
+    Route::post('/actualizar-datos/{id}', [UsuarioController::class, 'actualizarDatos'])
+        ->name('usuarios.actualizar.datos');
+
+    // Guardar contraseña
+    Route::post('/actualizar-password/{id}', [UsuarioController::class, 'actualizarPassword'])
+        ->name('usuarios.actualizar.password');
+
+    // Borrado lógico
+    Route::get('/eliminar/{id}', [UsuarioController::class, 'eliminar'])
+        ->name('usuarios.eliminar');
+
+    // ROLES PARA USUARIO
+    Route::post('/roles/{id}', [UsuarioController::class, 'guardarRoles'])
+        ->name('usuarios.roles.guardar');
+});
+
+// Buscador AJAX de Roles
+Route::get('/roles/buscar', function(Request $request) {
+    return \App\Models\Rol::where('inactivo', 0)
+        ->where('nombre', 'LIKE', "%{$request->q}%")
+        ->limit(10)
+        ->get();
+})->name('roles.buscar');
+
+
+// ==========================================================
+//  ROLES
+// ==========================================================
+Route::prefix('roles')->group(function () {
+
+    Route::get('/lista', [RolController::class, 'lista'])
+        ->name('roles.lista');
+
+    Route::get('/gestion', [RolController::class, 'gestion'])
+        ->name('roles.gestion');
+
+    Route::get('/nuevo', [RolController::class, 'nuevo'])
+        ->name('roles.nuevo');
+
+    Route::post('/guardar', [RolController::class, 'guardar'])
+        ->name('roles.guardar');
+
+    Route::get('/editar/{id}', [RolController::class, 'editar'])
+        ->name('roles.editar');
+
+    Route::post('/actualizar/{id}', [RolController::class, 'actualizar'])
+        ->name('roles.actualizar');
+
+    Route::get('/eliminar/{id}', [RolController::class, 'eliminar'])
+        ->name('roles.eliminar');
+});
+
+
+// ==========================================================
+//  MODULOS
+// ==========================================================
+Route::prefix('modulos')->group(function () {
+
+    Route::get('/lista', [ModuloController::class, 'lista'])
+        ->name('modulos.lista');
+
+    Route::get('/gestion', [ModuloController::class, 'gestion'])
+        ->name('modulos.gestion');
+
+    Route::get('/nuevo', [ModuloController::class, 'nuevo'])
+        ->name('modulos.nuevo');
+
+    Route::post('/guardar', [ModuloController::class, 'guardar'])
+        ->name('modulos.guardar');
+
+    Route::get('/editar/{id}', [ModuloController::class, 'editar'])
+        ->name('modulos.editar');
+
+    Route::post('/actualizar/{id}', [ModuloController::class, 'actualizar'])
+        ->name('modulos.actualizar');
+
+    Route::get('/eliminar/{id}', [ModuloController::class, 'eliminar'])
+        ->name('modulos.eliminar');
+});
+
+
+// ==========================================================
+//  TAREAS
+// ==========================================================
+Route::prefix('tareas')->group(function () {
+
+    Route::get('/lista', [TareaController::class, 'lista'])
+        ->name('tareas.lista');
+
+    Route::get('/gestion', [TareaController::class, 'gestion'])
+        ->name('tareas.gestion');
+
+    Route::get('/nuevo', [TareaController::class, 'nuevo'])
+        ->name('tareas.nuevo');
+
+    Route::post('/guardar', [TareaController::class, 'guardar'])
+        ->name('tareas.guardar');
+
+    Route::get('/editar/{id}', [TareaController::class, 'editar'])
+        ->name('tareas.editar');
+
+    Route::post('/actualizar/{id}', [TareaController::class, 'actualizar'])
+        ->name('tareas.actualizar');
+
+    Route::get('/eliminar/{id}', [TareaController::class, 'eliminar'])
+        ->name('tareas.eliminar');
+});
+
 
 
 // -------- FORMULARIOS ----------
