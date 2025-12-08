@@ -4,245 +4,194 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\CostoController;
-
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\ModuloController;
 use App\Http\Controllers\TareaController;
 
 
+/*
+|--------------------------------------------------------------------------
+| LOGIN / LOGOUT
+|--------------------------------------------------------------------------
+*/
 Route::get('/login', [LoginController::class, 'mostrarLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'procesarLogin']);
-Route::get('/logout', [LoginController::class, 'logout']);
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+
+/*
+|--------------------------------------------------------------------------
+| RUTAS PROTEGIDAS POR AUTENTICACIÓN
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth.custom')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('inicio');
+
+Route::get('/dashboard', function () {
+    return view('inicio');
+})->name('dashboard');
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EMPRESAS
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('empresa')->group(function () {
+        Route::get('/lista', [EmpresaController::class, 'lista'])->name('empresa.lista');
+        Route::get('/nuevo', [EmpresaController::class, 'crear'])->name('empresa.nueva');
+        Route::post('/guardar', [EmpresaController::class, 'insertar'])->name('empresa.insertar');
+
+        Route::get('/editar/{id}', [EmpresaController::class, 'editar'])->name('empresa.editar');
+        Route::put('/actualizar/{id}', [EmpresaController::class, 'actualizar'])->name('empresa.actualizar');
+
+        Route::delete('/eliminar/{id}', [EmpresaController::class, 'eliminar'])->name('empresa.eliminar');
     });
-});
 
-// Dashboard
 
-// Compras
-Route::get('/compras/nueva', fn() => 'nueva compra')->name('compras.nueva');
+    /*
+    |--------------------------------------------------------------------------
+    | USUARIOS
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('usuarios')->group(function () {
 
-// Productos
-Route::get('/productos', fn() => 'lista productos')->name('productos.lista');
-Route::get('/productos/nuevo', fn() => 'nuevo producto')->name('productos.nuevo');
+        // Listas
+        Route::get('/lista', [UsuarioController::class, 'lista'])->name('usuarios.lista');
+        Route::get('/gestion', [UsuarioController::class, 'gestion'])->name('usuarios.gestion');
 
-// Proveedores
-Route::get('/proveedores', fn() => 'lista proveedores')->name('proveedores.lista');
+        // CRUD
+        Route::get('/nuevo', [UsuarioController::class, 'nuevo'])->name('usuarios.nuevo');
+        Route::post('/guardar', [UsuarioController::class, 'guardar'])->name('usuarios.guardar');
 
-// Usuarios
-Route::get('/usuarios', fn() => 'lista usuarios')->name('usuarios.lista');
-Route::get('/usuarios/nuevo', fn() => 'nuevo usuario')->name('usuarios.nuevo');
+        Route::get('/editar/{id}', [UsuarioController::class, 'editar'])->name('usuarios.editar');
 
-// Inventario
-Route::get('/inventario', fn() => 'inventario')->name('inventario.form');
+        Route::post('/actualizar-datos/{id}', [UsuarioController::class, 'actualizarDatos'])->name('usuarios.actualizar.datos');
+        Route::post('/actualizar-password/{id}', [UsuarioController::class, 'actualizarPassword'])->name('usuarios.actualizar.password');
 
-// Roles
-Route::get('/roles', fn() => 'lista roles')->name('roles.lista');
+        Route::get('/eliminar/{id}', [UsuarioController::class, 'eliminar'])->name('usuarios.eliminar');
 
-// Empresas
-// Mostrar formulario
-Route::get('/empresa/nueva', [EmpresaController::class, 'crear'])
-    ->name('empresa.nueva');
+        // Roles
+        Route::post('/roles/{id}', [UsuarioController::class, 'guardarRoles'])
+            ->name('usuarios.roles.guardar');
+    });
 
-// Guardar datos
-Route::post('/empresa/insertar', [EmpresaController::class, 'insertar'])
-    ->name('empresa.insertar');
+    // AJAX Buscar Rol
+    Route::get('/roles/buscar', [RolController::class, 'buscar'])->name('roles.buscar');
 
-// Listado
-Route::get('/empresa/lista/', [EmpresaController::class, 'lista'])
-    ->name('empresa.lista');
 
-route::get('/empresa/editar/{id}', [EmpresaController::class, 'editar'])
-    ->name('empresa.editar');
 
-Route::put('/empresa/actualizar/{id}', [EmpresaController::class, 'actualizar'])
-    ->name('empresa.actualizar');
+// =====================================================
+// ROLES
+// =====================================================
+        Route::prefix('roles')->group(function () {
 
-Route::delete('/empresa/eliminar/{id}', [EmpresaController::class, 'eliminar'])
-    ->name('empresa.eliminar');
+            Route::get('/lista', [RolController::class, 'lista'])->name('roles.lista');
+            Route::get('/gestion', [RolController::class, 'gestion'])->name('roles.gestion');
 
-// Empresas fin
+            Route::get('/nuevo', [RolController::class, 'nuevo'])->name('roles.nuevo');
+            Route::post('/guardar', [RolController::class, 'guardar'])->name('roles.guardar');
 
-Route::get('/costos', [CostoController::class, 'lista'])->name('costo.lista');
-Route::get('/costos/nuevo', [CostoController::class, 'crear'])->name('costo.nuevo');
-Route::post('/costos/insertar', [CostoController::class, 'insertar'])->name('costo.insertar');
+            Route::get('/editar/{id}', [RolController::class, 'editar'])->name('roles.editar');
+            Route::put('/actualizar/{id}', [RolController::class, 'actualizar'])->name('roles.actualizar');
 
-Route::get('/costos/editar/{id}', [CostoController::class, 'editar'])->name('costo.editar');
-Route::put('/costos/actualizar/{id}', [CostoController::class, 'actualizar'])->name('costo.actualizar');
+            Route::post('/tareas/{id}', [RolController::class, 'guardarTareas'])->name('roles.tareas.guardar');
 
-Route::delete('/costos/eliminar/{id}', [CostoController::class, 'eliminar'])->name('costo.eliminar');
+            Route::get('/eliminar/{id}', [RolController::class, 'eliminar'])->name('roles.eliminar');
 
-// ==========================================================
-//  USUARIOS
-// ==========================================================
-Route::prefix('usuarios')->group(function () {
+            Route::get('/detalle/{id}', [RolController::class, 'detalle'])->name('roles.detalle');
+        });
 
-    // LISTAS
-    Route::get('/lista', [UsuarioController::class, 'lista'])
-        ->name('usuarios.lista');
 
-    Route::get('/gestion', [UsuarioController::class, 'gestion'])
-        ->name('usuarios.gestion');
-
-    // CRUD BÁSICO
-    Route::get('/nuevo', [UsuarioController::class, 'nuevo'])
-        ->name('usuarios.nuevo');
-
-    Route::post('/guardar', [UsuarioController::class, 'guardar'])
-        ->name('usuarios.guardar');
-
-    Route::get('/editar/{id}', [UsuarioController::class, 'editar'])
-        ->name('usuarios.editar');
-
-    // Guardar datos generales
-    Route::post('/actualizar-datos/{id}', [UsuarioController::class, 'actualizarDatos'])
-        ->name('usuarios.actualizar.datos');
-
-    // Guardar contraseña
-    Route::post('/actualizar-password/{id}', [UsuarioController::class, 'actualizarPassword'])
-        ->name('usuarios.actualizar.password');
-
-    // Borrado lógico
-    Route::get('/eliminar/{id}', [UsuarioController::class, 'eliminar'])
-        ->name('usuarios.eliminar');
-
-    // ROLES PARA USUARIO
-    Route::post('/roles/{id}', [UsuarioController::class, 'guardarRoles'])
-        ->name('usuarios.roles.guardar');
-});
-
-// Buscador AJAX de Roles
-Route::get('/roles/buscar', function(Request $request) {
-    return \App\Models\Rol::where('inactivo', 0)
+Route::get('/tareas/buscar', function(Request $request) {
+    return \App\Models\Tarea::where('inactivo', 0)
         ->where('nombre', 'LIKE', "%{$request->q}%")
         ->limit(10)
         ->get();
-})->name('roles.buscar');
+})->name('tareas.buscar');
+    /*
+    |--------------------------------------------------------------------------
+    | MÓDULOS
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('modulos')->group(function () {
+        Route::get('/lista', [ModuloController::class, 'lista'])->name('modulos.lista');
+        Route::get('/gestion', [ModuloController::class, 'gestion'])->name('modulos.gestion');
+
+        Route::get('/nuevo', [ModuloController::class, 'nuevo'])->name('modulos.nuevo');
+        Route::post('/guardar', [ModuloController::class, 'guardar'])->name('modulos.guardar');
+
+        Route::get('/editar/{id}', [ModuloController::class, 'editar'])->name('modulos.editar');
+        Route::put('/actualizar/{id}', [ModuloController::class, 'actualizar'])->name('modulos.actualizar');
+
+        Route::get('/eliminar/{id}', [ModuloController::class, 'eliminar'])->name('modulos.eliminar');
+
+        Route::get('/admin', [ModuloController::class, 'admin'])->name('modulos.admin');
+
+        Route::get('/restaurar/{id}', [ModuloController::class, 'restaurar'])->name('modulos.restaurar');
+    });
 
 
-// ==========================================================
-//  ROLES
-// ==========================================================
-Route::prefix('roles')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | TAREAS
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('tareas')->group(function () {
+        Route::get('/lista', [TareaController::class, 'lista'])->name('tareas.lista');
+        Route::get('/gestion', [TareaController::class, 'gestion'])->name('tareas.gestion');
 
-    Route::get('/lista', [RolController::class, 'lista'])
-        ->name('roles.lista');
+        Route::get('/nuevo', [TareaController::class, 'nuevo'])->name('tareas.nuevo');
+        Route::post('/guardar', [TareaController::class, 'guardar'])->name('tareas.guardar');
 
-    Route::get('/gestion', [RolController::class, 'gestion'])
-        ->name('roles.gestion');
+        Route::get('/editar/{id}', [TareaController::class, 'editar'])->name('tareas.editar');
+        Route::post('/actualizar/{id}', [TareaController::class, 'actualizar'])->name('tareas.actualizar');
 
-    Route::get('/nuevo', [RolController::class, 'nuevo'])
-        ->name('roles.nuevo');
-
-    Route::post('/guardar', [RolController::class, 'guardar'])
-        ->name('roles.guardar');
-
-    Route::get('/editar/{id}', [RolController::class, 'editar'])
-        ->name('roles.editar');
-
-    Route::post('/actualizar/{id}', [RolController::class, 'actualizar'])
-        ->name('roles.actualizar');
-
-    Route::get('/eliminar/{id}', [RolController::class, 'eliminar'])
-        ->name('roles.eliminar');
-});
+        Route::get('/eliminar/{id}', [TareaController::class, 'eliminar'])->name('tareas.eliminar');
+    });
 
 
-// ==========================================================
-//  MODULOS
-// ==========================================================
-Route::prefix('modulos')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | COSTOS
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('costo')->group(function () {
+        Route::get('/lista', [CostoController::class, 'lista'])->name('costo.lista');
+        Route::get('/nuevo', [CostoController::class, 'crear'])->name('costo.nuevo');
+        Route::post('/guardar', [CostoController::class, 'insertar'])->name('costo.insertar');
 
-    Route::get('/lista', [ModuloController::class, 'lista'])
-        ->name('modulos.lista');
+        Route::get('/editar/{id}', [CostoController::class, 'editar'])->name('costo.editar');
+        Route::put('/actualizar/{id}', [CostoController::class, 'actualizar'])->name('costo.actualizar');
 
-    Route::get('/gestion', [ModuloController::class, 'gestion'])
-        ->name('modulos.gestion');
-
-    Route::get('/nuevo', [ModuloController::class, 'nuevo'])
-        ->name('modulos.nuevo');
-
-    Route::post('/guardar', [ModuloController::class, 'guardar'])
-        ->name('modulos.guardar');
-
-    Route::get('/editar/{id}', [ModuloController::class, 'editar'])
-        ->name('modulos.editar');
-
-    Route::post('/actualizar/{id}', [ModuloController::class, 'actualizar'])
-        ->name('modulos.actualizar');
-
-    Route::get('/eliminar/{id}', [ModuloController::class, 'eliminar'])
-        ->name('modulos.eliminar');
-});
-
-
-// ==========================================================
-//  TAREAS
-// ==========================================================
-Route::prefix('tareas')->group(function () {
-
-    Route::get('/lista', [TareaController::class, 'lista'])
-        ->name('tareas.lista');
-
-    Route::get('/gestion', [TareaController::class, 'gestion'])
-        ->name('tareas.gestion');
-
-    Route::get('/nuevo', [TareaController::class, 'nuevo'])
-        ->name('tareas.nuevo');
-
-    Route::post('/guardar', [TareaController::class, 'guardar'])
-        ->name('tareas.guardar');
-
-    Route::get('/editar/{id}', [TareaController::class, 'editar'])
-        ->name('tareas.editar');
-
-    Route::post('/actualizar/{id}', [TareaController::class, 'actualizar'])
-        ->name('tareas.actualizar');
-
-    Route::get('/eliminar/{id}', [TareaController::class, 'eliminar'])
-        ->name('tareas.eliminar');
-});
-
-
-
-// -------- FORMULARIOS ----------
-Route::get('/familia/nueva', fn() => 'Formulario: Nueva Familia')->name('familia.nueva');
-//Route::get('/costo/nuevo', fn() => 'Formulario: Nuevo Costo')->name('costo.nuevo');
-Route::get('/modulo/nuevo', fn() => 'Formulario: Nuevo Modulo')->name('modulo.nuevo');
-Route::get('/producto/nuevo', fn() => 'Formulario: Nuevo Producto')->name('producto.nuevo');
-Route::get('/tarea/nueva', fn() => 'Formulario: Nueva Tarea')->name('tarea.nueva');
-Route::get('/usuario/nuevo', fn() => 'Formulario: Nuevo Usuario')->name('usuario.nuevo');
-Route::get('/rol/nuevo', fn() => 'Formulario: Nuevo Rol')->name('rol.nuevo');
-Route::get('/proveedor/nuevo', fn() => 'Formulario: Nuevo Proveedor')->name('proveedor.nuevo');
-Route::get('/compra/nueva', fn() => 'Formulario: Nueva Compra')->name('compra.nueva');
-Route::get('/inventario/nuevo', fn() => 'Formulario: Inventario')->name('inventario.nuevo');
-Route::get('/inventario/manual', fn() => 'Formulario: Inventario Manual')->name('inventario.manual');
-
-// -------- LISTAS ----------
-Route::get('/familia/lista', fn() => 'Lista: Familias')->name('familia.lista');
-//Route::get('/costo/lista', fn() => 'Lista: Costos')->name('costo.lista');
-Route::get('/modulo/lista', fn() => 'Lista: Modulos')->name('modulo.lista');
-Route::get('/producto/lista', fn() => 'Lista: Productos')->name('producto.lista');
-Route::get('/tarea/lista', fn() => 'Lista: Tareas')->name('tarea.lista');
-Route::get('/usuario/lista', fn() => 'Lista: Usuarios')->name('usuario.lista');
-Route::get('/rol/lista', fn() => 'Lista: Roles')->name('rol.lista');
-Route::get('/proveedor/lista', fn() => 'Lista: Proveedores')->name('proveedor.lista');
-
-// -------- GESTIONES ----------
-Route::get('/familia/gestion', fn() => 'Gestionar: Familias')->name('familia.gestion');
-Route::get('/costo/gestion', fn() => 'Gestionar: Costos')->name('costo.gestion');
-Route::get('/modulo/gestion', fn() => 'Gestionar: Modulos')->name('modulo.gestion');
-Route::get('/producto/gestion', fn() => 'Gestionar: Productos')->name('producto.gestion');
-Route::get('/tarea/gestion', fn() => 'Gestionar: Tareas')->name('tarea.gestion');
-Route::get('/usuario/gestion', fn() => 'Gestionar: Usuarios')->name('usuario.gestion');
-Route::get('/rol/gestion', fn() => 'Gestionar: Roles')->name('rol.gestion');
-Route::get('/proveedor/gestion', fn() => 'Gestionar: Proveedores')->name('proveedor.gestion');
-
-
+        Route::delete('/eliminar/{id}', [CostoController::class, 'eliminar'])->name('costo.eliminar');
+    });
 
 
     
+// FORMULARIOS
+Route::view('/familia/nueva', 'placeholder')->name('familia.nueva');
+Route::view('/producto/nuevo', 'placeholder')->name('producto.nuevo');
+Route::view('/proveedor/nuevo', 'placeholder')->name('proveedor.nuevo');
+Route::view('/compra/nueva', 'placeholder')->name('compra.nueva');
+Route::view('/inventario/nuevo', 'placeholder')->name('inventario.nuevo');
+Route::view('/inventario/manual', 'placeholder')->name('inventario.manual');
+
+// LISTAS
+Route::view('/familia/lista', 'placeholder')->name('familia.lista');
+Route::view('/producto/lista', 'placeholder')->name('producto.lista');
+Route::view('/proveedor/lista', 'placeholder')->name('proveedor.lista');
+
+// GESTIÓN
+Route::view('/familia/gestion', 'placeholder')->name('familia.gestion');
+Route::view('/producto/gestion', 'placeholder')->name('producto.gestion');
+Route::view('/proveedor/gestion', 'placeholder')->name('proveedor.gestion'); 
+Route::view('/costo/gestion', 'placeholder')->name('costo.gestion'); 
+
+
+
+
+});

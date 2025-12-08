@@ -38,7 +38,8 @@
 
 /* ----- INPUTS ----- */
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 8px 12px;            /* menos alto para compactar */
     border-radius: 8px;
@@ -52,6 +53,20 @@
 .form-group textarea:focus {
     border-color: #3b82f6;
     outline: none;
+}
+
+.form-group select:focus {
+    border-color: #3b82f6;
+    outline: none;
+    background: #182235;
+}
+
+
+.form-group select {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23e2e8f0' height='24' viewBox='0 0 24 24' width='24'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 35px;
 }
 
 /* ----- BOTONES ----- */

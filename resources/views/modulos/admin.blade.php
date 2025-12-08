@@ -2,15 +2,9 @@
 
 @section('content')
 
-<h2 class="erp-title">Gestión de Módulos</h2>
+<h2 class="erp-title">Módulos Eliminados</h2>
 
-<div class="erp-actions" style="margin-bottom: 10px;">
-    <a href="{{ route('modulos.nuevo') }}" class="btn-primary">
-        <i class="fa-solid fa-plus"></i> Nuevo Módulo
-    </a>
-</div>
-
-<form method="GET" action="{{ route('modulos.gestion') }}" class="erp-search-form">
+<form method="GET" action="{{ route('modulos.admin') }}" class="erp-search-form">
     <div class="search-row">
         <input type="text" name="nombre" class="search-input" placeholder="Nombre"
                value="{{ request('nombre') }}">
@@ -27,7 +21,7 @@
             <th>Nombre</th>
             <th>Descripción</th>
             <th>Módulo Padre</th>
-            <th style="width:150px; text-align:center;">Acciones</th>
+            <th style="width:180px;text-align:center;">Acciones</th>
         </tr>
     </thead>
 
@@ -40,19 +34,27 @@
             <td>{{ optional($m->padre)->nombre ?? '-' }}</td>
 
             <td class="erp-actions-cell">
+
                 <a href="{{ route('modulos.editar', $m->id_modulo) }}" class="btn-edit">
                     <i class="fa-solid fa-pen"></i>
                 </a>
 
-                <a href="{{ route('modulos.eliminar', $m->id_modulo) }}" class="btn-delete"
-                   onclick="return confirm('¿Eliminar módulo?')">
-                    <i class="fa-solid fa-trash"></i>
+                {{-- Restaurar --}}
+                <a href="{{ route('modulos.restaurar', $m->id_modulo) }}"
+                   onclick="return confirm('¿Restaurar módulo?')"
+                   class="btn-secondary"
+                   style="background:#16a34a;">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
                 </a>
+
+                {{-- Eliminar definitivo (opcional, futuro) --}}
+                {{-- <a href="#" class="btn-delete"><i class="fa-solid fa-trash"></i></a> --}}
+
             </td>
         </tr>
         @empty
         <tr>
-            <td colspan="5" class="no-results">No hay registros</td>
+            <td colspan="5" class="no-results">No hay registros eliminados</td>
         </tr>
         @endforelse
     </tbody>

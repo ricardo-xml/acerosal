@@ -1,3 +1,11 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Tarea;
+use App\Models\Modulo;
+
 class TareaController extends Controller
 {
     public function lista(Request $request)

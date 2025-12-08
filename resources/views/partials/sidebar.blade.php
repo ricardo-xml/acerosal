@@ -26,7 +26,7 @@
                 <li><a href="{{ route('roles.nuevo') }}">Nuevo Rol</a></li>
                 <li><a href="{{ route('empresa.nueva') }}">Nueva Empresa</a></li>
                 <li><a href="{{ route('familia.nueva') }}">Nueva Familia</a></li>
-                <li><a href="{{ route('costo.nuevo') }}">Nuevo Costo</a></li
+                <li><a href="{{ route('costo.nuevo') }}">Nuevo Costo</a></li>
                 <li><a href="{{ route('producto.nuevo') }}">Nuevo Producto</a></li>
                 <li><a href="{{ route('proveedor.nuevo') }}">Nuevo Proveedor</a></li>
                 <li><a href="{{ route('compra.nueva') }}">Nueva Compra</a></li>
@@ -45,12 +45,10 @@
             </button>
 
             <ul id="listMenu" class="sidebar-submenu">
-                <ul id="listMenu" class="sidebar-submenu">
-               <li><a href="{{ route('modulos.lista') }}">Módulos</a></li>
+                <li><a href="{{ route('modulos.lista') }}">Módulos</a></li>
                 <li><a href="{{ route('tareas.lista') }}">Tareas</a></li>
                 <li><a href="{{ route('usuarios.lista') }}">Usuarios</a></li>
                 <li><a href="{{ route('roles.lista') }}">Roles</a></li>
-
                 <li><a href="{{ route('empresa.lista') }}">Empresas</a></li>
                 <li><a href="{{ route('familia.lista') }}">Familias</a></li>
                 <li><a href="{{ route('costo.lista') }}">Costos</a></li>
@@ -73,7 +71,6 @@
                 <li><a href="{{ route('tareas.gestion') }}">Tareas</a></li>
                 <li><a href="{{ route('usuarios.gestion') }}">Usuarios</a></li>
                 <li><a href="{{ route('roles.gestion') }}">Roles</a></li>
-
                 <li><a href="{{ route('empresa.lista') }}">Empresas</a></li>
                 <li><a href="{{ route('familia.gestion') }}">Familias</a></li>
                 <li><a href="{{ route('costo.gestion') }}">Costos</a></li>

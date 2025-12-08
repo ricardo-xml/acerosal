@@ -2,28 +2,42 @@
 
 @section('content')
 
-<h2 class="erp-title">Nuevo Rol</h2>
+<div class="form-container">
 
-@if(session('msg'))
-<div class="form-alert">{{ session('msg') }}</div>
-@endif
+    <h2 class="form-title">
+        <i class="fa-solid fa-id-card"></i> Nuevo Rol
+    </h2>
 
-<form method="POST" action="{{ route('roles.guardar') }}" class="erp-form">
-    @csrf
+    @if(session('msg'))
+        <div class="form-alert">{{ session('msg') }}</div>
+    @endif
 
-    <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" name="nombre" class="form-control">
-    </div>
+    <form method="POST" action="{{ route('roles.guardar') }}">
+        @csrf
 
-    <div class="form-group">
-        <label>Descripción</label>
-        <input type="text" name="descripcion" class="form-control">
-    </div>
+        <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" name="nombre" required value="{{ old('nombre') }}">
+            @error('nombre')
+                <div class="form-error">{{ $message }}</div>
+            @enderror
+        </div>
 
-    <div class="form-actions">
-        <button class="btn-primary">Guardar</button>
-    </div>
-</form>
+        <div class="form-group">
+            <label>Descripción *</label>
+            <textarea name="descripcion" rows="3" required>{{ old('descripcion') }}</textarea>
+            @error('descripcion')
+                <div class="form-error">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-actions">
+            <button class="btn-primary" type="submit">Guardar</button>
+            <a class="btn-secondary" href="{{ route('roles.lista') }}">Cancelar</a>
+        </div>
+
+    </form>
+
+</div>
 
 @endsection
