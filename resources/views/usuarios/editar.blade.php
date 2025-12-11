@@ -2,168 +2,134 @@
 
 @section('content')
 
-@php
-    $seccion = request('seccion'); // datos / password / roles
-@endphp
+<div class="form-container">
 
-<div class="erp-section">
-
-    <h2 class="erp-title">
-        <i class="fa-solid fa-user-pen"></i> Editar Usuario — {{ $usuario->username }}
+    <h2 class="form-title">
+        <i class="fa-solid fa-user-pen"></i> Editar Usuario
     </h2>
 
-    {{-- MENSAJES --}}
     @if(session('msg'))
         <div class="form-alert">{{ session('msg') }}</div>
     @endif
 
-    {{-- -------------------------------------------------- --}}
-    {{-- SECCIÓN 1: DATOS GENERALES --}}
-    {{-- -------------------------------------------------- --}}
-    <div class="accordion">
+    {{-- FORM 1: DATOS GENERALES --}}
+    <form method="POST" action="{{ route('usuarios.actualizar.datos', $usuario->id_usuario) }}">
+        @csrf
+        @method('PUT')
 
-        <div class="accordion-header" data-target="datos">
-            <span class="accordion-icon">{{ $seccion === 'datos' ? '▼' : '▶' }}</span>
-            <span class="accordion-title">Datos Generales</span>
+        <div class="form-group">
+            <label>Usuario *</label>
+            <input type="text" name="username" required value="{{ old('username', $usuario->username) }}">
+            @error('username')
+                <div class="form-error">{{ $message }}</div>
+            @enderror
         </div>
 
-        <div id="accordion-datos"
-             class="accordion-content"
-             style="display: {{ $seccion === 'datos' ? 'block' : 'none' }}">
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" name="nombre" value="{{ old('nombre', $usuario->nombre) }}">
+            @error('nombre')
+                <div class="form-error">{{ $message }}</div>
+            @enderror
+        </div>
 
-            <form class="erp-form" method="POST"
-                action="{{ route('usuarios.actualizar.datos', $usuario->id_usuario) }}">
+        <div class="form-group">
+            <label>Apellidos</label>
+            <input type="text" name="apellidos" value="{{ old('apellidos', $usuario->apellidos) }}">
+            @error('apellidos')
+                <div class="form-error">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" name="email" required value="{{ old('email', $usuario->email) }}">
+                @error('email')
+                    <div class="form-error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label>Celular *</label>
+                <input type="text" name="celular" required value="{{ old('celular', $usuario->celular) }}">
+                @error('celular')
+                    <div class="form-error">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn-primary" type="submit">Guardar Datos</button>
+            <a class="btn-secondary" href="{{ route('usuarios.gestion') }}">Volver</a>
+        </div>
+    </form>
+
+    {{-- FORM 2: CAMBIAR CONTRASEÑA --}}
+    <div class="accordion" style="margin-top: 20px;">
+        <div class="accordion-header" onclick="toggleAccordion('pwdBox')">
+            <span class="accordion-icon">🔐</span> Cambiar contraseña
+        </div>
+        <div id="pwdBox" class="accordion-content">
+
+            <form method="POST" action="{{ route('usuarios.actualizar.password', $usuario->id_usuario) }}">
                 @csrf
+                @method('PUT')
 
-                <div class="form-grid">
-
+                <div class="form-row">
                     <div class="form-group">
-                        <label>Usuario</label>
-                        <input type="text" value="{{ $usuario->username }}" class="form-control" disabled>
+                        <label>Nueva Contraseña *</label>
+                        <input type="password" name="password" required>
+                        @error('password')
+                            <div class="form-error">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
-                        <label>Nombre</label>
-                        <input type="text" name="nombre" class="form-control"
-                               value="{{ old('nombre', $usuario->nombre) }}">
+                        <label>Confirmar Contraseña *</label>
+                        <input type="password" name="password_confirmation" required>
                     </div>
-
-                    <div class="form-group">
-                        <label>Apellidos</label>
-                        <input type="text" name="apellidos" class="form-control"
-                               value="{{ old('apellidos', $usuario->apellidos) }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" class="form-control"
-                               value="{{ old('email', $usuario->email) }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Celular</label>
-                        <input type="text" name="celular" class="form-control"
-                               value="{{ old('celular', $usuario->celular) }}">
-                    </div>
-
                 </div>
 
-                <div class="form-actions">
-                    <button class="btn-primary">Guardar Datos</button>
+                <div class="form-actions" style="margin-top: 10px;">
+                    <button class="btn-primary" type="submit">Guardar Contraseña</button>
                 </div>
-
             </form>
 
         </div>
     </div>
 
-    {{-- -------------------------------------------------- --}}
-    {{-- SECCIÓN 2: CONTRASEÑA --}}
-    {{-- -------------------------------------------------- --}}
-    <div class="accordion">
-
-        <div class="accordion-header" data-target="password">
-            <span class="accordion-icon">{{ $seccion === 'password' ? '▼' : '▶' }}</span>
-            <span class="accordion-title">Cambiar Contraseña</span>
+    {{-- FORM 3: ROLES DEL USUARIO --}}
+    <div class="accordion" style="margin-top: 20px;">
+        <div class="accordion-header" onclick="toggleAccordion('rolesBox')">
+            <span class="accordion-icon">📌</span> Roles del usuario
         </div>
+        <div id="rolesBox" class="accordion-content">
 
-        <div id="accordion-password"
-             class="accordion-content"
-             style="display: {{ $seccion === 'password' ? 'block' : 'none' }}">
-
-            <form class="erp-form" method="POST"
-                action="{{ route('usuarios.actualizar.password', $usuario->id_usuario) }}">
+            <form method="POST" action="{{ route('usuarios.roles.guardar', $usuario->id_usuario) }}">
                 @csrf
 
-                <div class="form-grid">
+                <div style="position:relative; margin-bottom: 10px;">
+                    <input type="text"
+                           id="buscar_rol"
+                           class="search-input"
+                           placeholder="Buscar roles...">
+                    <div id="resultados_roles" class="autocomplete-results"></div>
+                </div>
 
-                    <div class="form-group">
-                        <label>Nueva Contraseña</label>
-                        <input type="password" name="password" class="form-control">
+                <div id="roles_seleccionados" class="roles-container">
+                    @foreach($rolesAsignados as $r)
+                    <div class="rol-tag">
+                        {{ $r->nombre }}
+                        <input type="hidden" name="roles[]" value="{{ $r->id_rol }}">
+                        <button type="button" class="btn-remove-rol" onclick="this.parentNode.remove()">✖</button>
                     </div>
-
-                    <div class="form-group">
-                        <label>Confirmar Contraseña</label>
-                        <input type="password" name="password2" class="form-control">
-                    </div>
-
+                    @endforeach
                 </div>
 
-                <div class="form-actions">
-                    <button class="btn-primary">Actualizar Contraseña</button>
+                <div class="form-actions" style="margin-top: 15px;">
+                    <button class="btn-primary" type="submit">Guardar Roles</button>
                 </div>
-
-            </form>
-
-        </div>
-    </div>
-
-    {{-- -------------------------------------------------- --}}
-    {{-- SECCIÓN 3: ROLES --}}
-    {{-- -------------------------------------------------- --}}
-    <div class="accordion">
-
-        <div class="accordion-header" data-target="roles">
-            <span class="accordion-icon">{{ $seccion === 'roles' ? '▼' : '▶' }}</span>
-            <span class="accordion-title">Asignar Roles</span>
-        </div>
-
-        <div id="accordion-roles"
-             class="accordion-content"
-             style="display: {{ $seccion === 'roles' ? 'block' : 'none' }}">
-
-            <form class="erp-form" method="POST"
-                action="{{ route('usuarios.roles.guardar', $usuario->id_usuario) }}">
-                @csrf
-
-                {{-- BUSCADOR --}}
-                <div class="form-group" style="position:relative;">
-                    <label>Buscar rol</label>
-                    <input type="text" id="buscadorRol" class="form-control"
-                           placeholder="Escriba para buscar...">
-                    <div id="resultadosRoles" class="autocomplete-results"></div>
-                </div>
-
-                {{-- ROLES ACTUALES --}}
-                <div class="form-group">
-                    <label>Roles asignados</label>
-                    <div id="contenedorRoles" class="roles-container">
-
-                        @foreach($rolesAsignados as $rol)
-                            <div class="rol-tag" data-id="{{ $rol->id_rol }}">
-                                {{ $rol->nombre }}
-                                <input type="hidden" name="roles[]" value="{{ $rol->id_rol }}">
-                                <button type="button" class="btn-remove-rol">✖</button>
-                            </div>
-                        @endforeach
-
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button class="btn-primary">Guardar Roles</button>
-                </div>
-
             </form>
 
         </div>
@@ -171,91 +137,60 @@
 
 </div>
 
-@endsection
-
-
-{{-- ------------------------------------------------------------ --}}
-{{-- JS PARA ACORDEONES + BUSQUEDA DE ROLES --}}
-{{-- ------------------------------------------------------------ --}}
-@section('scripts')
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+function toggleAccordion(id) {
+    const box = document.getElementById(id);
+    if (!box) return;
+    box.style.display = (box.style.display === "block") ? "none" : "block";
+}
 
-    // ========================
-    //  ACORDEONES
-    // ========================
-    document.querySelectorAll(".accordion-header").forEach(header => {
-        header.addEventListener("click", () => {
-            let target = header.dataset.target;
-            let content = document.getElementById("accordion-" + target);
-            let icon = header.querySelector(".accordion-icon");
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("buscar_rol");
+    const contResultados = document.getElementById("resultados_roles");
+    const contSeleccionados = document.getElementById("roles_seleccionados");
 
-            if (content.style.display === "none" || content.style.display === "") {
-                content.style.display = "block";
-                icon.textContent = "▼";
-            } else {
-                content.style.display = "none";
-                icon.textContent = "▶";
-            }
-        });
-    });
+    if (!input) return;
 
-
-    // ========================
-    //  BUSQUEDA DE ROLES
-    // ========================
-    const buscador = document.getElementById("buscadorRol");
-    const resultados = document.getElementById("resultadosRoles");
-    const contenedor = document.getElementById("contenedorRoles");
-
-    buscador.addEventListener("keyup", async () => {
-        let q = buscador.value.trim();
-        if(q.length < 2){
-            resultados.innerHTML = "";
+    input.addEventListener("keyup", async function () {
+        let q = this.value.trim();
+        if (q.length < 2) {
+            contResultados.innerHTML = "";
             return;
         }
 
-        const res = await fetch("{{ route('roles.buscar') }}?q=" + q);
-        const roles = await res.json();
+        const resp = await fetch(`{{ route('roles.buscar') }}?q=${encodeURIComponent(q)}`);
+        const data = await resp.json();
 
-        resultados.innerHTML = "";
-        roles.forEach(rol => {
+        contResultados.innerHTML = "";
 
-            // Evitar duplicados
-            if (document.querySelector('.rol-tag[data-id="' + rol.id_rol + '"]')) return;
-
-            let div = document.createElement("div");
+        data.forEach(item => {
+            const div = document.createElement("div");
             div.classList.add("autocomplete-item");
-            div.textContent = rol.nombre;
-            div.dataset.id = rol.id_rol;
+            div.textContent = item.nombre;
 
-            div.onclick = () => agregarRol(rol.id_rol, rol.nombre);
-            resultados.appendChild(div);
+            div.onclick = function () {
+                // Evitar duplicados si ya existe ese rol seleccionado
+                if (contSeleccionados.querySelector(`input[value="${item.id_rol}"]`)) {
+                    contResultados.innerHTML = "";
+                    input.value = "";
+                    return;
+                }
+
+                contSeleccionados.innerHTML += `
+                    <div class="rol-tag">
+                        ${item.nombre}
+                        <input type="hidden" name="roles[]" value="${item.id_rol}">
+                        <button type="button" class="btn-remove-rol" onclick="this.parentNode.remove()">✖</button>
+                    </div>
+                `;
+                contResultados.innerHTML = "";
+                input.value = "";
+            };
+
+            contResultados.appendChild(div);
         });
     });
-
-    function agregarRol(id, nombre) {
-        if (document.querySelector('.rol-tag[data-id="' + id + '"]')) return;
-
-        let tag = document.createElement("div");
-        tag.className = "rol-tag";
-        tag.dataset.id = id;
-        tag.innerHTML = `
-            ${nombre}
-            <input type="hidden" name="roles[]" value="${id}">
-            <button type="button" class="btn-remove-rol">✖</button>
-        `;
-        contenedor.appendChild(tag);
-        resultados.innerHTML = "";
-        buscador.value = "";
-    }
-
-    contenedor.addEventListener("click", (e) => {
-        if(e.target.classList.contains("btn-remove-rol")){
-            e.target.parentElement.remove();
-        }
-    });
-
 });
 </script>
+
 @endsection

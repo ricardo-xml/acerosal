@@ -11,7 +11,7 @@
 <!-- TARJETAS PRINCIPALES -->
 <div class="dash-cards">
 
-    <a href="{{ route('compra.nueva') }}" class="dash-card">
+    <a href="{{ route('compras.nueva') }}" class="dash-card">
         <div class="dash-icon bg-blue"><i class="fa-solid fa-cart-shopping"></i></div>
         <div class="dash-info">
             <h3>Nueva Compra</h3>

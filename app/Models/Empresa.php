@@ -1,21 +1,16 @@
 <?php
 
 namespace App\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Empresa extends Model
 {
-    // Nombre REAL de la tabla
     protected $table = 'empresas';
-
-    // Llave primaria REAL
     protected $primaryKey = 'id_empresa';
-
-    // La tabla NO tiene created_at / updated_at
     public $timestamps = false;
 
-    // Campos que se pueden llenar masivamente
     protected $fillable = [
         'nombre',
         'nit',
@@ -26,4 +21,14 @@ class Empresa extends Model
         'correo_contacto',
         'inactivo'
     ];
+
+    protected $casts = [
+        'inactivo' => 'boolean'
+    ];
+
+    public function compras()
+    {
+        return $this->hasMany(Compra::class, 'id_empresa');
+    }
 }
+

@@ -15,4 +15,13 @@ class Costo extends Model
         'descripcion',
         'inactivo'
     ];
+
+    protected $casts = [
+        'inactivo' => 'boolean'
+    ];
+
+    public function compraCostos()
+    {
+        return $this->hasMany(CompraCosto::class, 'id_costo');
+    }
 }

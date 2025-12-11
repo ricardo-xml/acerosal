@@ -2,103 +2,77 @@
 
 @section('content')
 
-<div class="erp-section">
+<h2 class="erp-title">
+    <i class="fa-solid fa-users-gear"></i> Gestión de Usuarios
+</h2>
 
-    <h2 class="erp-title">
-        <i class="fa-solid fa-user-gear"></i> Gestión de Usuarios
-    </h2>
-
-    @if(session('msg'))
-        <div class="form-alert">{{ session('msg') }}</div>
-    @endif
-
-    {{-- FILTROS --}}
-    <form method="GET" action="{{ route('usuarios.gestion') }}" class="erp-filters">
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label>Nombre</label>
-                <input type="text" name="nombre" class="form-control" value="{{ request('nombre') }}">
-            </div>
-
-            <div class="form-group">
-                <label>Usuario</label>
-                <input type="text" name="username" class="form-control" value="{{ request('username') }}">
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input type="text" name="email" class="form-control" value="{{ request('email') }}">
-            </div>
-
-        </div>
-
-        <div class="form-actions">
-            <button class="btn-primary">Aplicar Filtros</button>
-            <a href="{{ route('usuarios.gestion') }}" class="btn-secondary">Limpiar</a>
-        </div>
-    </form>
-
-    {{-- BOTÓN NUEVO --}}
-    <div class="form-actions" style="margin-bottom: 10px;">
-        <a class="btn-primary" href="{{ route('usuarios.nuevo') }}">
-            <i class="fa-solid fa-user-plus"></i> Nuevo Usuario
-        </a>
-    </div>
-
-    {{-- TABLA --}}
-    <table class="erp-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Nombre Completo</th>
-                <th>Email</th>
-                <th>Celular</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @forelse($usuarios as $u)
-                <tr>
-                    <td>{{ $u->id_usuario }}</td>
-                    <td>{{ $u->username }}</td>
-                    <td>{{ $u->nombre }} {{ $u->apellidos }}</td>
-                    <td>{{ $u->email }}</td>
-                    <td>{{ $u->celular }}</td>
-
-                    <td class="erp-actions">
-
-                        {{-- EDITAR --}}
-                        <a class="btn-edit" href="{{ route('usuarios.editar', $u->id_usuario) }}">✏️</a>
-
-                        {{-- ELIMINAR --}}
-                        <a class="btn-delete"
-                           href="{{ route('usuarios.eliminar', $u->id_usuario) }}"
-                           onclick="return confirm('¿Eliminar usuario? (borrado lógico)')">
-                            🗑️
-                        </a>
-
-                        {{-- ASIGNAR ROLES --}}
-                        <a class="btn-secondary"
-                           href="{{ route('usuarios.roles', $u->id_usuario) }}">
-                            🔐 Roles
-                        </a>
-
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6">Sin resultados.</td>
-                </tr>
-            @endforelse
-        </tbody>
-
-    </table>
-
-    {{ $usuarios->links() }}
-
+<div class="erp-actions" style="margin-bottom: 10px;">
+    <a href="{{ route('usuarios.nuevo') }}" class="btn-primary">
+        <i class="fa-solid fa-user-plus"></i> Nuevo Usuario
+    </a>
 </div>
+
+<form method="GET" action="{{ route('usuarios.gestion') }}" class="erp-search-form">
+    <div class="search-row">
+        <input type="text"
+               name="q"
+               class="search-input"
+               placeholder="Buscar por usuario, nombre, apellidos, correo o celular..."
+               value="{{ request('q') }}">
+        <button class="btn-primary" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+        </button>
+    </div>
+</form>
+
+<table class="erp-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Email</th>
+            <th>Celular</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @forelse($usuarios as $index => $u)
+        <tr>
+            <td>{{ ($usuarios->currentPage() - 1) * $usuarios->perPage() + $index + 1 }}</td>
+
+            <td>{{ $u->username }}</td>
+            <td>{{ $u->nombre }}</td>
+            <td>{{ $u->apellidos }}</td>
+            <td>{{ $u->email }}</td>
+            <td>{{ $u->celular }}</td>
+
+            <td class="erp-actions-cell">
+                <a href="{{ route('usuarios.editar', $u->id_usuario) }}" class="btn-table btn-edit">
+                    <i class="fa-solid fa-pen-to-square"></i> Editar
+                </a>
+
+                <a href="{{ route('usuarios.eliminar', $u->id_usuario) }}"
+                   class="btn-table btn-delete"
+                   onclick="return confirm('¿Aplicar borrado lógico a este usuario?')">
+                    <i class="fa-solid fa-trash-can"></i> Eliminar
+                </a>
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="7" class="no-results">No hay registros.</td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
+
+@if($usuarios->hasPages())
+    <div style="margin-top:12px;">
+        {{ $usuarios->links() }}
+    </div>
+@endif
 
 @endsection

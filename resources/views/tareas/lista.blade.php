@@ -4,34 +4,80 @@
 
 <h2 class="erp-title">Lista de Tareas</h2>
 
-<form method="GET" action="{{ route('tareas.lista') }}" class="filtro-form">
-    <input type="text" name="nombre" placeholder="Nombre" value="{{ request('nombre') }}">
-    <button class="btn-primary">Buscar</button>
+{{-- ACCIONES --}}
+<div class="erp-actions" style="margin-bottom: 10px;">
+    <a href="{{ route('tareas.nuevo') }}" class="btn-primary">
+        <i class="fa-solid fa-plus"></i> Nueva Tarea
+    </a>
+</div>
+
+{{-- FILTROS --}}
+<form method="GET" action="{{ route('tareas.lista') }}" class="erp-search-form">
+    <div class="search-row">
+        {{-- filtro por nombre --}}
+        <input type="text"
+               name="nombre"
+               class="search-input"
+               placeholder="Nombre"
+               value="{{ request('nombre') }}">
+
+        {{-- filtro por módulo --}}
+        <select name="id_modulo" class="search-input">
+            <option value="">Todos los módulos</option>
+            @foreach($modulos as $mod)
+                <option value="{{ $mod->id_modulo }}"
+                    {{ (string)request('id_modulo') === (string)$mod->id_modulo ? 'selected' : '' }}>
+                    {{ $mod->nombre }}
+                </option>
+            @endforeach
+        </select>
+
+        <button class="btn-primary" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+        </button>
+    </div>
 </form>
 
 <table class="erp-table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Módulo</th>
+            <th>#</th> {{-- Correlativo --}}
             <th>Nombre</th>
-            <th>Ruta</th>
-            <th>Orden</th>
+            <th>Descripción</th>
+            <th>Módulo</th>
+            <th>Acciones</th>
         </tr>
     </thead>
+
     <tbody>
-        @foreach($tareas as $t)
+        @forelse($tareas as $index => $t)
         <tr>
-            <td>{{ $t->id_tarea }}</td>
-            <td>{{ $t->modulo->nombre }}</td>
+            {{-- correlativo considerando la paginación --}}
+            <td>{{ ($tareas->currentPage() - 1) * $tareas->perPage() + $index + 1 }}</td>
+
             <td>{{ $t->nombre }}</td>
-            <td>{{ $t->ruta }}</td>
-            <td>{{ $t->orden }}</td>
+            <td>{{ $t->descripcion }}</td>
+            <td>{{ optional($t->modulo)->nombre ?? '-' }}</td>
+
+            <td class="erp-actions-cell">
+                <a href="{{ route('tareas.detalle', $t->id_tarea) }}"
+                   class="btn-table btn-edit">
+                    <i class="fa-solid fa-eye"></i> Ver detalle
+                </a>
+            </td>
         </tr>
-        @endforeach
+        @empty
+        <tr>
+            <td colspan="5" class="no-results">No hay tareas registradas.</td>
+        </tr>
+        @endforelse
     </tbody>
 </table>
 
-{{ $tareas->links() }}
+@if($tareas->hasPages())
+    <div style="margin-top:12px;">
+        {{ $tareas->links() }}
+    </div>
+@endif
 
 @endsection

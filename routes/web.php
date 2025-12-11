@@ -8,7 +8,8 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\ModuloController;
 use App\Http\Controllers\TareaController;
-
+use App\Http\Controllers\CompraController;
+use App\Http\Controllers\ProductoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +52,7 @@ Route::get('/', function () {
         Route::delete('/eliminar/{id}', [EmpresaController::class, 'eliminar'])->name('empresa.eliminar');
     });
 
-
+    
     /*
     |--------------------------------------------------------------------------
     | USUARIOS
@@ -59,29 +60,53 @@ Route::get('/', function () {
     */
     Route::prefix('usuarios')->group(function () {
 
-        // Listas
-        Route::get('/lista', [UsuarioController::class, 'lista'])->name('usuarios.lista');
-        Route::get('/gestion', [UsuarioController::class, 'gestion'])->name('usuarios.gestion');
+        // LISTAS
+        Route::get('/lista', [UsuarioController::class, 'lista'])
+            ->name('usuarios.lista');        // solo lectura
 
-        // CRUD
-        Route::get('/nuevo', [UsuarioController::class, 'nuevo'])->name('usuarios.nuevo');
-        Route::post('/guardar', [UsuarioController::class, 'guardar'])->name('usuarios.guardar');
+        Route::get('/gestion', [UsuarioController::class, 'gestion'])
+            ->name('usuarios.gestion');      // editar / eliminar
 
-        Route::get('/editar/{id}', [UsuarioController::class, 'editar'])->name('usuarios.editar');
+        Route::get('/admin', [UsuarioController::class, 'admin'])
+            ->name('usuarios.admin');        // incluye eliminados ( para futuro )
 
-        Route::post('/actualizar-datos/{id}', [UsuarioController::class, 'actualizarDatos'])->name('usuarios.actualizar.datos');
-        Route::post('/actualizar-password/{id}', [UsuarioController::class, 'actualizarPassword'])->name('usuarios.actualizar.password');
+        // NUEVO / GUARDAR
+        Route::get('/nuevo', [UsuarioController::class, 'crear'])
+            ->name('usuarios.nuevo');
 
-        Route::get('/eliminar/{id}', [UsuarioController::class, 'eliminar'])->name('usuarios.eliminar');
+        Route::post('/guardar', [UsuarioController::class, 'guardar'])
+            ->name('usuarios.guardar');
 
-        // Roles
+        // DETALLE (texto plano + lista de roles)
+        Route::get('/detalle/{id}', [UsuarioController::class, 'detalle'])
+            ->name('usuarios.detalle');
+
+        // EDITAR DATOS
+        Route::get('/editar/{id}', [UsuarioController::class, 'editar'])
+            ->name('usuarios.editar');
+
+        Route::put('/actualizar/{id}', [UsuarioController::class, 'actualizarDatos'])
+            ->name('usuarios.actualizar.datos');
+
+        // CAMBIAR PASSWORD (form aparte)
+        Route::put('/password/{id}', [UsuarioController::class, 'actualizarPassword'])
+            ->name('usuarios.actualizar.password');
+
+        // BORRADO LÓGICO / RESTAURAR
+        Route::get('/eliminar/{id}', [UsuarioController::class, 'eliminar'])
+            ->name('usuarios.eliminar');
+
+        Route::get('/restaurar/{id}', [UsuarioController::class, 'restaurar'])
+            ->name('usuarios.restaurar');
+
+        // ROLES (formularios de “tablillas”)
         Route::post('/roles/{id}', [UsuarioController::class, 'guardarRoles'])
             ->name('usuarios.roles.guardar');
     });
 
-    // AJAX Buscar Rol
-    Route::get('/roles/buscar', [RolController::class, 'buscar'])->name('roles.buscar');
-
+    // Buscador AJAX de Roles (ya lo venías usando)
+    Route::get('/roles/buscar', [RolController::class, 'buscar'])
+        ->name('roles.buscar');
 
 
 // =====================================================
@@ -106,13 +131,13 @@ Route::get('/', function () {
         });
 
 
-Route::get('/tareas/buscar', function(Request $request) {
-    return \App\Models\Tarea::where('inactivo', 0)
-        ->where('nombre', 'LIKE', "%{$request->q}%")
-        ->limit(10)
-        ->get();
-})->name('tareas.buscar');
-    /*
+    Route::get('/tareas/buscar', function(Request $request) {
+        return \App\Models\Tarea::where('inactivo', 0)
+            ->where('nombre', 'LIKE', "%{$request->q}%")
+            ->limit(10)
+            ->get();
+    })->name('tareas.buscar');
+        /*
     |--------------------------------------------------------------------------
     | MÓDULOS
     |--------------------------------------------------------------------------
@@ -134,24 +159,37 @@ Route::get('/tareas/buscar', function(Request $request) {
         Route::get('/restaurar/{id}', [ModuloController::class, 'restaurar'])->name('modulos.restaurar');
     });
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | TAREAS
-    |--------------------------------------------------------------------------
-    */
+    // ==========================================================
+    //  TAREAS
+    // ==========================================================
     Route::prefix('tareas')->group(function () {
+
         Route::get('/lista', [TareaController::class, 'lista'])->name('tareas.lista');
         Route::get('/gestion', [TareaController::class, 'gestion'])->name('tareas.gestion');
+
+        // Vista futura Admin
+        Route::get('/admin', [TareaController::class, 'admin'])->name('tareas.admin'); 
 
         Route::get('/nuevo', [TareaController::class, 'nuevo'])->name('tareas.nuevo');
         Route::post('/guardar', [TareaController::class, 'guardar'])->name('tareas.guardar');
 
         Route::get('/editar/{id}', [TareaController::class, 'editar'])->name('tareas.editar');
-        Route::post('/actualizar/{id}', [TareaController::class, 'actualizar'])->name('tareas.actualizar');
+        Route::put('/actualizar/{id}', [TareaController::class, 'actualizar'])->name('tareas.actualizar');
+
+        Route::get('/detalle/{id}', [TareaController::class, 'detalle'])->name('tareas.detalle');
 
         Route::get('/eliminar/{id}', [TareaController::class, 'eliminar'])->name('tareas.eliminar');
+        Route::get('/restaurar/{id}', [TareaController::class, 'restaurar'])->name('tareas.restaurar');
     });
+
+    // Buscador AJAX para asignación de roles
+    Route::get('/tareas/buscar', function(Request $request) {
+        return \App\Models\Tarea::where('inactivo', 0)
+            ->where('nombre', 'LIKE', "%{$request->q}%")
+            ->limit(10)
+            ->get();
+    });
+
 
 
     /*
@@ -171,12 +209,43 @@ Route::get('/tareas/buscar', function(Request $request) {
     });
 
 
-    
+  
+    /*
+    |--------------------------------------------------------------------------
+    | COMPRAS
+    |--------------------------------------------------------------------------
+    */  
+
+    Route::prefix('compras')->name('compras.')->group(function () {
+
+        // LISTA PRINCIPAL (solo activas)
+        Route::get('/', [CompraController::class, 'index'])->name('lista');
+
+        // CREAR
+        Route::get('/nueva', [CompraController::class, 'create'])->name('nueva');
+        Route::post('/guardar', [CompraController::class, 'store'])->name('store');
+
+        // DETALLE
+        Route::get('/detalle/{id}', [CompraController::class, 'detalle'])->name('detalle');
+
+        // ELIMINAR / ANULAR
+        Route::post('/eliminar/{id}', [CompraController::class, 'eliminar'])->name('eliminar');
+
+        // SOLO ADMIN – VER ANULADAS
+        Route::get('/anuladas', [CompraController::class, 'anuladas'])
+            ->middleware('admin')
+            ->name('anuladas');
+
+    });
+        
+     // AJAX – Obtener productos por familia
+        Route::get('/productos/familia/{id}', [ProductoController::class, 'porFamilia'])
+         ->name('productos.porFamilia');
+
 // FORMULARIOS
 Route::view('/familia/nueva', 'placeholder')->name('familia.nueva');
 Route::view('/producto/nuevo', 'placeholder')->name('producto.nuevo');
 Route::view('/proveedor/nuevo', 'placeholder')->name('proveedor.nuevo');
-Route::view('/compra/nueva', 'placeholder')->name('compra.nueva');
 Route::view('/inventario/nuevo', 'placeholder')->name('inventario.nuevo');
 Route::view('/inventario/manual', 'placeholder')->name('inventario.manual');
 

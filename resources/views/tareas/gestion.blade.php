@@ -4,44 +4,96 @@
 
 <h2 class="erp-title">Gestión de Tareas</h2>
 
-<div class="erp-actions">
-    <a href="{{ route('tareas.nuevo') }}" class="btn-primary">Nueva Tarea</a>
+{{-- ACCIONES --}}
+<div class="erp-actions" style="margin-bottom: 10px;">
+    <a href="{{ route('tareas.nuevo') }}" class="btn-primary">
+        <i class="fa-solid fa-plus"></i> Nueva Tarea
+    </a>
 </div>
 
-<form method="GET" action="{{ route('tareas.gestion') }}" class="filtro-form">
-    <input type="text" name="nombre" placeholder="Nombre" value="{{ request('nombre') }}">
-    <button class="btn-primary">Buscar</button>
+{{-- FILTROS --}}
+<form method="GET" action="{{ route('tareas.gestion') }}" class="erp-search-form">
+    <div class="search-row">
+        {{-- filtro por nombre --}}
+        <input type="text"
+               name="nombre"
+               class="search-input"
+               placeholder="Nombre"
+               value="{{ request('nombre') }}">
+
+        {{-- filtro por módulo --}}
+        <select name="id_modulo" class="search-input">
+            <option value="">Todos los módulos</option>
+            @foreach($modulos as $mod)
+                <option value="{{ $mod->id_modulo }}"
+                    {{ (string)request('id_modulo') === (string)$mod->id_modulo ? 'selected' : '' }}>
+                    {{ $mod->nombre }}
+                </option>
+            @endforeach
+        </select>
+
+        <button class="btn-primary" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+        </button>
+    </div>
 </form>
 
 <table class="erp-table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Módulo</th>
+            <th>#</th>
             <th>Nombre</th>
-            <th>Ruta</th>
-            <th>Orden</th>
-            <th></th>
+            <th>Descripción</th>
+            <th>Módulo</th>
+            <th>Acciones</th>
         </tr>
     </thead>
+
     <tbody>
-        @foreach($tareas as $t)
+        @forelse($tareas as $index => $t)
         <tr>
-            <td>{{ $t->id_tarea }}</td>
-            <td>{{ $t->modulo->nombre }}</td>
+            <td>{{ ($tareas->currentPage() - 1) * $tareas->perPage() + $index + 1 }}</td>
+
             <td>{{ $t->nombre }}</td>
-            <td>{{ $t->ruta }}</td>
-            <td>{{ $t->orden }}</td>
-            <td>
-                <a href="{{ route('tareas.editar', $t->id_tarea) }}" class="btn-secondary">Editar</a>
-                <a href="{{ route('tareas.eliminar', $t->id_tarea) }}" class="btn-danger"
-                    onclick="return confirm('¿Eliminar tarea?')">Eliminar</a>
+            <td>{{ $t->descripcion }}</td>
+            <td>{{ optional($t->modulo)->nombre ?? '-' }}</td>
+
+            <td class="erp-actions-cell">
+                <a href="{{ route('tareas.detalle', $t->id_tarea) }}"
+                   class="btn-table btn-edit">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+
+                <a href="{{ route('tareas.editar', $t->id_tarea) }}"
+                   class="btn-table btn-edit">
+                    <i class="fa-solid fa-pen"></i>
+                </a>
+
+                <form method="POST"
+                      action="{{ route('tareas.eliminar', $t->id_tarea) }}"
+                      style="display:inline;"
+                      onsubmit="return confirm('¿Eliminar esta tarea (borrado lógico)?')">
+                    @csrf
+                    {{-- si la ruta la definiste como DELETE, añade @method('DELETE') --}}
+                    @method('DELETE')
+                    <button type="submit" class="btn-table btn-delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </form>
             </td>
         </tr>
-        @endforeach
+        @empty
+        <tr>
+            <td colspan="5" class="no-results">No hay tareas para gestionar.</td>
+        </tr>
+        @endforelse
     </tbody>
 </table>
 
-{{ $tareas->links() }}
+@if($tareas->hasPages())
+    <div style="margin-top:12px;">
+        {{ $tareas->links() }}
+    </div>
+@endif
 
 @endsection

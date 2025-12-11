@@ -125,4 +125,15 @@ public function editar($id)
 
         return back()->with('msg', 'Rol eliminado.');
     }
+
+
+    public function buscar(Request $request)
+    {
+        $q = $request->q;
+
+        return Rol::where('inactivo', 0)
+            ->where('nombre', 'LIKE', "%{$q}%")
+            ->limit(10)
+            ->get();
+    }
 }
