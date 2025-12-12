@@ -20,8 +20,8 @@
             </button>
 
             <ul id="formMenu" class="sidebar-submenu">
-                <li><a href="{{ route('modulos.nuevo') }}">Nuevo Módulo</a></li>
-                <li><a href="{{ route('tareas.nuevo') }}">Nueva Tarea</a></li>
+<!--                 <li><a href="{{ route('modulos.nuevo') }}">Nuevo Módulo</a></li>
+                <li><a href="{{ route('tareas.nuevo') }}">Nueva Tarea</a></li> -->
                 <li><a href="{{ route('usuarios.nuevo') }}">Nuevo Usuario</a></li>
                 <li><a href="{{ route('roles.nuevo') }}">Nuevo Rol</a></li>
                 <li><a href="{{ route('empresa.nueva') }}">Nueva Empresa</a></li>
@@ -30,7 +30,7 @@
                 <li><a href="{{ route('producto.nuevo') }}">Nuevo Producto</a></li>
                 <li><a href="{{ route('proveedor.nuevo') }}">Nuevo Proveedor</a></li>
                 <li><a href="{{ route('compras.nueva') }}">Nueva Compra</a></li>
-                <li><a href="{{ route('inventario.nuevo') }}">Inventario</a></li>
+                <li><a href="{{ route('inventario.automatico') }}">Inventario</a></li>
                 <li><a href="{{ route('inventario.manual') }}">Inventario Manual</a></li>
             </ul>
         </li>
@@ -79,6 +79,21 @@
                 <li><a href="{{ route('proveedor.gestion') }}">Proveedores</a></li>
             </ul>
         </li>
+
+                <!-- REPORTES -->
+        <li class="sidebar-section">
+            <button class="sidebar-item" onclick="toggleSubmenu('reportesMenu')">
+                <i class="fa-solid fa-gear"></i>
+                <span class="item-text">Reportes</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+            </button>
+
+            <ul id="reportesMenu" class="sidebar-submenu">
+                <li><a href="{{ route('inventario.kardex.index') }}">Kardex</a></li>
+                <li><a href="{{ route('inventario.kardex-global.index') }}">Kardex Global</a></li>
+            </ul>
+        </li>
+
 
     </ul>
 </aside>

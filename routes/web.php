@@ -10,6 +10,10 @@ use App\Http\Controllers\ModuloController;
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\KardexController;
+use App\Http\Controllers\KardexGlobalController;
+use App\Http\Controllers\InventarioManualController;
 
 /*
 |--------------------------------------------------------------------------
@@ -242,12 +246,78 @@ Route::get('/', function () {
         Route::get('/productos/familia/{id}', [ProductoController::class, 'porFamilia'])
          ->name('productos.porFamilia');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Inventario
+    |--------------------------------------------------------------------------
+    */  
+    Route::prefix('inventario')->name('inventario.')->group(function () {
+
+        // Formulario automático
+        Route::get('/automatico', [InventarioController::class, 'automatico'])
+            ->name('automatico');
+
+        // AJAX detalle compra
+        Route::get('/compra/{id}/detalle', [InventarioController::class, 'detalleCompra'])
+            ->name('detalle-compra');
+
+        // Validar código lote
+        Route::get('/verificar-codigo-lote', [InventarioController::class, 'verificarCodigoLote'])
+            ->name('verificar-codigo-lote');
+
+        // Guardar inventario
+        Route::post('/automatico/guardar', [InventarioController::class, 'guardarAutomatico'])
+            ->name('guardar-automatico');
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | KARDEX
+    |--------------------------------------------------------------------------
+    */  
+    
+    Route::prefix('inventario')->name('inventario.')->group(function () {
+
+        // ... rutas que ya tienes (automático, etc.)
+
+        // Kardex
+        Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
+
+        // Autocomplete por código de pieza
+        Route::get('/kardex/buscar-pieza', [KardexController::class, 'buscarPieza'])
+            ->name('kardex.buscar-pieza');
+
+        // Datos del kardex (JSON)
+        Route::get('/kardex/pieza/{id}', [KardexController::class, 'obtenerKardex'])
+            ->name('kardex.obtener');
+
+        // Exportar a PDF
+        Route::get('/kardex/pieza/{id}/pdf', [KardexController::class, 'exportarPdf'])
+            ->name('kardex.pdf');
+
+        // Kardex Global
+        Route::get('/kardex-global', [KardexGlobalController::class, 'index'])
+            ->name('kardex-global.index');
+
+        Route::get('/kardex-global/datos', [KardexGlobalController::class, 'datos'])
+            ->name('kardex-global.datos');
+
+        Route::get('/kardex-global/pdf', [KardexGlobalController::class, 'exportarPdf'])
+            ->name('kardex-global.pdf');
+    });
+
+Route::get('/inventario/manual', [InventarioManualController::class, 'index'])
+    ->name('inventario.manual');
+
+Route::post('/inventario/manual/guardar', [InventarioManualController::class, 'guardar']);
+
 // FORMULARIOS
 Route::view('/familia/nueva', 'placeholder')->name('familia.nueva');
 Route::view('/producto/nuevo', 'placeholder')->name('producto.nuevo');
 Route::view('/proveedor/nuevo', 'placeholder')->name('proveedor.nuevo');
-Route::view('/inventario/nuevo', 'placeholder')->name('inventario.nuevo');
-Route::view('/inventario/manual', 'placeholder')->name('inventario.manual');
+//Route::view('/inventario/nuevo', 'placeholder')->name('inventario.nuevo');
+//Route::view('/inventario/manual', 'placeholder')->name('inventario.manual');
 
 // LISTAS
 Route::view('/familia/lista', 'placeholder')->name('familia.lista');

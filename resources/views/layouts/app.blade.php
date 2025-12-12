@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <title>ERP Acerosal</title>
 
     <!-- FontAwesome -->
@@ -12,8 +14,8 @@
    <!-- TODOS LOS CSS ORIGINALES -->
 <link rel="stylesheet" href="{{ asset('CSS/main-grid.css') }}">
 <link rel="stylesheet" href="{{ asset('CSS/main-grid2.css') }}">
-<link rel="stylesheet" href="{{ asset('CSS/main-layout-10-06.css') }}">
-<link rel="stylesheet" href="{{ asset('CSS/main-layout-10-09.css') }}">
+<!-- <link rel="stylesheet" href="{{ asset('CSS/main-layout-10-06.css') }}">
+ --><link rel="stylesheet" href="{{ asset('CSS/main-layout-10-09.css') }}">
 <link rel="stylesheet" href="{{ asset('CSS/erp-styles.css') }}">
 <link rel="stylesheet" href="{{ asset('CSS/dashboard.css') }}">
 <link rel="stylesheet" href="{{ asset('CSS/sidebar.css') }}">
@@ -23,7 +25,7 @@
 <link rel="stylesheet" href="{{ asset('CSS/test.css') }}">
 <link rel="stylesheet" href="{{ asset('CSS/test2.css') }}">
 <link rel="stylesheet" href="{{ asset('CSS/form-compras6.css') }}">
-<link rel="stylesheet" href="{{ asset('CSS/inventario.css') }}">
+<!-- <link rel="stylesheet" href="{{ asset('CSS/inventario.css') }}"> -->
 
 </head>
 

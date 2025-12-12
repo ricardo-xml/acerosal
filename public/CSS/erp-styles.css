@@ -559,3 +559,345 @@ body {
     border-radius: 4px;
     font-size: 14px;
 }
+
+
+/*inventario*/
+
+/* ===== LAYOUT ===== */
+
+.inventario-wrapper {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+    padding: 20px;
+    min-height: 90vh;
+}
+
+.listbox-compras {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #d1d1d1;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+.listbox {
+    width: 100%;
+    height: 450px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    padding: 5px;
+    font-size: 15px;
+}
+
+/* ===== INFORMACIÓN COMPRA ===== */
+
+.grid-info-compra {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: #eef2ff;
+    padding: 10px;
+    border-radius: 8px;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* ===== TARJETA LOTE ===== */
+
+.form-lote {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 25px;
+    border: 1px solid #ddd;
+}
+
+.grid-lote {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+/* ===== TABLA DE PIEZAS ===== */
+
+.tabla-piezas-container {
+    margin-top: 10px;
+}
+
+.tabla-piezas {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-piezas th {
+    background: #2e4a82;
+    color: white;
+    padding: 6px;
+}
+
+.tabla-piezas td {
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+    text-align: center;
+}
+
+.btn-agregar-pieza {
+    margin-top: 8px;
+    background: #2e4a82;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* ===== ACCIONES ===== */
+
+.acciones-final {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-guardar {
+    background: green;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* ===== BOTONES ===== */
+
+.btn-eliminar-pieza {
+    background: crimson;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* kardex */
+
+.kardex-wrapper {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.kardex-busqueda h2 {
+    margin-bottom: 10px;
+}
+
+.kardex-busqueda-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.kardex-busqueda-row label {
+    min-width: 130px;
+    padding-top: 6px;
+}
+
+.kardex-busqueda-input {
+    position: relative;
+    width: 350px;
+}
+
+.kardex-busqueda-input input[type="text"] {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Autocomplete */
+.kardex-autocomplete {
+    position: absolute;
+    top: 32px;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    max-height: 180px;
+    overflow-y: auto;
+    z-index: 20;
+}
+
+.kardex-autocomplete-item {
+    padding: 5px 8px;
+    cursor: pointer;
+}
+
+.kardex-autocomplete-item:hover {
+    background: #eef2ff;
+}
+
+/* Resumen pieza */
+.kardex-resumen-card {
+    background: #f7f7f8;
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kardex-placeholder {
+    grid-column: 1 / -1;
+    color: #666;
+}
+
+.kardex-error {
+    color: #b91c1c;
+}
+
+/* Tabla Kardex */
+.kardex-tabla-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.kardex-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.kardex-table th {
+    background: #2e4a82;
+    color: white;
+    padding: 6px 4px;
+}
+
+.kardex-table td {
+    border: 1px solid #ddd;
+    padding: 4px;
+    text-align: center;
+}
+
+
+/* kardex global */
+
+.kardex-global-wrapper {
+    padding: 20px;
+}
+
+.filtros-kardex-global {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.autocomplete-wrapper {
+    position: relative;
+}
+
+.autocomplete-list {
+    position: absolute;
+    top: 34px;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 160px;
+    overflow-y: auto;
+    border-radius: 6px;
+    z-index: 10;
+}
+
+.autocomplete-item:hover {
+    background: #eef2ff;
+}
+
+.tabla-kardex-global {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.tabla-kardex-global th {
+    background: #2e4a82;
+    color: white;
+    padding: 6px;
+}
+
+.tabla-kardex-global td {
+    border: 1px solid #ccc;
+    padding: 4px;
+}
+
+.btn-mini {
+    background: #4a6fa5;
+    padding: 4px 8px;
+    color: white;
+    border-radius: 4px;
+}
+
+
+
+.inventario-wrapper {
+    max-width: 900px;
+    margin: auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.tarjeta-lote {
+    padding: 15px;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+    border-radius: 6px;
+    background: #f8f8f8;
+}
+
+.pieza-item {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.btn-mini {
+    padding: 6px 12px;
+    margin-bottom: 15px;
+    background: #0a7dda;
+    border: none;
+    color: white;
+}
+
+.btn-remove {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.btn-guardar {
+    background: green;
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    margin-top: 20px;
+}
+
+
+.inventario-wrapper .form-grid {
+    min-height: auto !important;
+    grid-template-rows: auto !important;
+}

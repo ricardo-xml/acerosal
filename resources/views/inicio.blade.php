@@ -49,7 +49,7 @@
 <h2 class="dash-subsection-title">⚡ Accesos rápidos</h2>
 <div class="dash-quick-access">
 
-    <a href="{{ route('inventario.nuevo') }}" class="quick-btn">
+    <a href="{{ route('inventario.automatico') }}" class="quick-btn">
         <i class="fa-solid fa-warehouse"></i> Inventario
     </a>
 
