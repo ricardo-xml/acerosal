@@ -66,17 +66,24 @@ class KardexGlobalController extends Controller
 
         $mov = $query->get()->map(function ($m) {
             return [
-                'fecha'     => $m->fecha,
-                'producto'  => $m->pieza->producto->descripcion ?? '',
-                'codigo'    => $m->pieza->codigo,
-                'lote'      => $m->pieza->lote->codigo ?? '',
-                'origen'    => $m->origen,
-                'tipo'      => $m->tipo,
-                'mts'       => $m->cantidad,
-                'lbs'       => $m->peso,
-                'usuario'   => $m->usuario->nombre ?? '',
-                'comentario'=> $m->comentario,
-                'id_pieza'  => $m->id_pieza,
+                'fecha'          => $m->fecha,
+                'producto'       => $m->pieza->producto->descripcion ?? '',
+                'codigo'         => $m->pieza->codigo ?? '',
+                'lote'           => $m->pieza->lote->codigo ?? '',
+                'origen'         => $m->origen,
+                'tipo'           => $m->tipo,
+
+                // DELTAS
+                'mts'            => $m->cantidad,
+                'lbs'            => $m->peso,
+
+                // SALDOS (NUEVO)
+                'saldo_mts'      => $m->saldo_metros,
+                'saldo_lbs'      => $m->saldo_libras,
+
+                'usuario'        => $m->usuario->nombre ?? '',
+                'comentario'     => $m->comentario,
+                'id_pieza'       => $m->id_pieza,
             ];
         });
 

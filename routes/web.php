@@ -14,6 +14,7 @@ use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\KardexController;
 use App\Http\Controllers\KardexGlobalController;
 use App\Http\Controllers\InventarioManualController;
+use App\Http\Controllers\InventarioAjustesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -311,6 +312,31 @@ Route::get('/inventario/manual', [InventarioManualController::class, 'index'])
     ->name('inventario.manual');
 
 Route::post('/inventario/manual/guardar', [InventarioManualController::class, 'guardar']);
+
+
+Route::prefix('inventario/ajustes')->name('inventario.ajustes.')->group(function () {
+
+    // Listas
+    Route::get('/lotes',  [InventarioAjustesController::class, 'lotesIndex'])->name('lotes');
+    Route::get('/piezas', [InventarioAjustesController::class, 'piezasIndex'])->name('piezas');
+
+    // Pantalla de ajustes
+    Route::get('/{id_lote}', [InventarioAjustesController::class, 'show'])->name('show');
+
+    // Updates
+    Route::post('/{id_lote}/lote/update',  [InventarioAjustesController::class, 'updateLote'])->name('lote.update');
+    Route::post('/pieza/{id_pieza}/update',[InventarioAjustesController::class, 'updatePieza'])->name('pieza.update');
+
+    // Acciones por pieza
+    Route::post('/pieza/{id_pieza}/retirar',[InventarioAjustesController::class, 'retirarPieza'])->name('pieza.retirar');
+    Route::post('/pieza/{id_pieza}/eliminar',[InventarioAjustesController::class, 'eliminarPieza'])->name('pieza.eliminar');
+
+    // Eliminar lote (cascada lógica + movimientos por pieza)
+    Route::post('/{id_lote}/eliminar', [InventarioAjustesController::class, 'eliminarLote'])->name('lote.eliminar');
+
+    // Barcode PDF carta (por pieza)
+    Route::get('/pieza/{id_pieza}/barcode-pdf', [InventarioAjustesController::class, 'barcodePdf'])->name('pieza.barcode_pdf');
+});
 
 // FORMULARIOS
 Route::view('/familia/nueva', 'placeholder')->name('familia.nueva');

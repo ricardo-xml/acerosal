@@ -91,7 +91,7 @@ class InventarioController extends Controller
     /**
      * Guardar inventario automático (lotes + piezas + movimientos)
      */
-    public function guardarAutomatico(Request $request)
+   public function guardarAutomatico(Request $request)
     {
         $idCompra = (int) $request->input('idCompra');
         $lotes = json_decode($request->input('lotes', '[]'), true);
@@ -106,7 +106,6 @@ class InventarioController extends Controller
 
         $compra = Compra::findOrFail($idCompra);
 
-        // protección extra
         if ($compra->nueva_compra == 0) {
             return response()->json([
                 'success' => false,
@@ -138,7 +137,6 @@ class InventarioController extends Controller
                     ]);
                 }
 
-                // validar si el lote ya existe
                 $existe = Lote::where('id_producto', $idProd)
                     ->where('codigo', $codigoLote)
                     ->where('eliminado', 0)
@@ -152,31 +150,32 @@ class InventarioController extends Controller
                     ]);
                 }
 
-                // crear el lote
+                // =====================
+                // CREAR LOTE
+                // =====================
                 $loteModel = Lote::create([
-                    'id_producto'             => $idProd,
-                    'codigo'                  => $codigoLote,
-                    'fecha_ingreso'           => $lote['Fecha_Ingreso'],
-                    'peso_total_libras'       => $lote['Peso_Total_Libras'],
-                    'cantidad_total_metros'   => $lote['Cantidad_Total_Metros'],
-                    'relacion_cantidad_peso'  => $lote['Relacion_Cantidad_Peso'],
-                    'total_piezas'            => $lote['Total_Piezas'],
-                    'eliminado'               => 0,
+                    'id_producto'               => $idProd,
+                    'codigo'                    => $codigoLote,
+                    'fecha_ingreso'             => $lote['Fecha_Ingreso'],
+                    'peso_total_libras'         => $lote['Peso_Total_Libras'],
+                    'unidad_medida_peso'        => 'lb',   // NUEVO
+                    'cantidad_total_metros'     => $lote['Cantidad_Total_Metros'],
+                    'unidad_medida_longitud'    => 'm',    // NUEVO
+                    'relacion_cantidad_peso'    => $lote['Relacion_Cantidad_Peso'],
+                    'total_piezas'              => $lote['Total_Piezas'],
+                    'eliminado'                 => 0,
                 ]);
 
-                // procesar piezas asociadas a este lote
                 if (!empty($piezas[$idProd])) {
 
                     $correlativo = 1;
 
                     foreach ($piezas[$idProd] as $pieza) {
 
-                        // calcular pesos y valores
                         $metros = (float) $pieza['Cantidad_Metros_Inicial'];
                         $rel = (float) $lote['Relacion_Cantidad_Peso'];
                         $peso = $rel * $metros;
 
-                        // generar código de pieza
                         $codigoPieza = $codigoProducto
                             . '-' . $codigoLote
                             . '-' . str_pad($correlativo, 3, '0', STR_PAD_LEFT);
@@ -196,30 +195,32 @@ class InventarioController extends Controller
                             'eliminado'                 => 0,
                         ]);
 
-                        // crear movimiento de inventario
+                        // =====================
+                        // MOVIMIENTO INVENTARIO
+                        // =====================
                         MovimientoInventario::create([
-                            'id_pieza'   => $piezaModel->id_pieza,
-                            'id_corte'   => null,
-                            'id_compra'  => $idCompra,
-                            'origen'     => 'Compra',
-                            'tipo'       => 'entrada',
-                            'cantidad'   => $metros,
-                            'peso'       => $peso,
-                            'fecha'      => now(),
-                            'id_usuario' => Auth::id() ?? 1,
-                            'comentario' => "Ingreso por compra, nueva pieza {$codigoPieza}",
-                            'eliminado'  => 0,
+                            'id_pieza'       => $piezaModel->id_pieza,
+                            'id_corte'       => null,
+                            'id_compra'      => $idCompra,
+                            'origen'         => 'Compra',
+                            'tipo'           => 'entrada',
+                            'cantidad'       => $metros,
+                            'peso'           => $peso,
+                            'saldo_metros'   => $metros, // NUEVO
+                            'saldo_libras'   => $peso,   // NUEVO
+                            'fecha'          => now(),
+                            'id_usuario'     => Auth::id() ?? 1,
+                            'comentario'     => "Ingreso por compra, nueva pieza {$codigoPieza}",
+                            'eliminado'      => 0,
                         ]);
 
                         $correlativo++;
                     }
 
-                    // actualizar total piezas
                     $loteModel->update(['total_piezas' => $correlativo - 1]);
                 }
             }
 
-            // marcar compra como procesada
             $compra->update(['nueva_compra' => 0]);
 
             DB::commit();
@@ -239,4 +240,5 @@ class InventarioController extends Controller
             ]);
         }
     }
+
 }

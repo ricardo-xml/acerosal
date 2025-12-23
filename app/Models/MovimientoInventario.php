@@ -18,18 +18,27 @@ class MovimientoInventario extends Model
         'tipo',
         'cantidad',
         'peso',
+        'saldo_metros',
+        'saldo_libras',
         'fecha',
         'id_usuario',
         'comentario',
-        'eliminado'
+        'eliminado',
     ];
 
     protected $casts = [
+        'cantidad' => 'float',
+        'peso' => 'float',
+        'saldo_metros' => 'float',
+        'saldo_libras' => 'float',
         'fecha' => 'datetime',
-        'eliminado' => 'boolean'
+        'eliminado' => 'boolean',
     ];
 
-    // RELACIONES
+    /* =====================
+     * Relaciones
+     * ===================== */
+
     public function pieza()
     {
         return $this->belongsTo(Pieza::class, 'id_pieza');

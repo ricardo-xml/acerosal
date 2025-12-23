@@ -66,7 +66,8 @@
 
         <button id="btnFiltrar" class="btn-guardar">Aplicar filtros</button>
 
-        <a id="btnPdfGlobal" class="btn-guardar" target="_blank" style="opacity:0.5;pointer-events:none;">
+        <a id="btnPdfGlobal" class="btn-guardar" target="_blank"
+           style="opacity:0.5;pointer-events:none;">
             Exportar PDF
         </a>
 
@@ -82,8 +83,15 @@
                 <th>Lote</th>
                 <th>Origen</th>
                 <th>Tipo</th>
-                <th>Mts</th>
-                <th>Lbs</th>
+
+                {{-- DELTAS --}}
+                <th>Δ Mts</th>
+                <th>Δ Lbs</th>
+
+                {{-- SALDOS --}}
+                <th>Saldo Mts</th>
+                <th>Saldo Lbs</th>
+
                 <th>Usuario</th>
                 <th>Comentario</th>
                 <th>Kardex</th>
@@ -93,7 +101,6 @@
     </table>
 
 </div>
-
 
 @vite(['resources/js/app.js'])
 @endsection

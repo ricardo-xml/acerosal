@@ -54,6 +54,8 @@
                 <li><a href="{{ route('costo.lista') }}">Costos</a></li>
                 <li><a href="{{ route('producto.lista') }}">Productos</a></li>
                 <li><a href="{{ route('proveedor.lista') }}">Proveedores</a></li>
+                <li><a href="{{ route('inventario.ajustes.lotes') }}">Lotes</a></li>
+                <li><a href="{{ route('inventario.ajustes.piezas') }}">Piezas</a></li>
             </ul>
         </li>
 

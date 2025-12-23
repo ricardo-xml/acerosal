@@ -15,18 +15,27 @@ class Lote extends Model
         'codigo',
         'fecha_ingreso',
         'peso_total_libras',
+        'unidad_medida_peso',
         'cantidad_total_metros',
+        'unidad_medida_longitud',
         'relacion_cantidad_peso',
         'total_piezas',
-        'eliminado'
+        'eliminado',
     ];
 
     protected $casts = [
         'fecha_ingreso' => 'date',
-        'eliminado' => 'boolean'
+        'peso_total_libras' => 'float',
+        'cantidad_total_metros' => 'float',
+        'relacion_cantidad_peso' => 'float',
+        'total_piezas' => 'integer',
+        'eliminado' => 'boolean',
     ];
 
-    // RELACIONES
+    /* =====================
+     * Relaciones
+     * ===================== */
+
     public function producto()
     {
         return $this->belongsTo(Producto::class, 'id_producto');

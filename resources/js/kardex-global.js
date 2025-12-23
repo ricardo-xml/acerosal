@@ -25,8 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tbody.innerHTML = "";
 
+        // ⚠️ Ajuste de colspan (ahora son más columnas)
         if (!data.length) {
-            tbody.innerHTML = `<tr><td colspan="11">No hay movimientos.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="13">No hay movimientos.</td></tr>`;
             btnPdf.style.pointerEvents = "none";
             btnPdf.style.opacity = "0.5";
             return;
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         data.forEach(m => {
             const tr = document.createElement("tr");
+
             tr.innerHTML = `
                 <td>${m.fecha}</td>
                 <td>${m.producto}</td>
@@ -41,14 +43,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${m.lote}</td>
                 <td>${m.origen}</td>
                 <td>${m.tipo}</td>
-                <td>${m.mts.toFixed(2)}</td>
-                <td>${m.lbs.toFixed(2)}</td>
+
+                <!-- DELTAS -->
+                <td class="text-end">${Number(m.mts).toFixed(2)}</td>
+                <td class="text-end">${Number(m.lbs).toFixed(2)}</td>
+
+                <!-- SALDOS -->
+                <td class="text-end fw-bold">${Number(m.saldo_mts).toFixed(2)}</td>
+                <td class="text-end fw-bold">${Number(m.saldo_lbs).toFixed(2)}</td>
+
                 <td>${m.usuario}</td>
                 <td>${m.comentario ?? ''}</td>
                 <td>
                     <a href="/inventario/kardex/pieza/${m.id_pieza}" class="btn-mini">Ver</a>
                 </td>
             `;
+
             tbody.appendChild(tr);
         });
 
